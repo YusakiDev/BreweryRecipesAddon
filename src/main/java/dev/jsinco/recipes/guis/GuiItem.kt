@@ -57,7 +57,7 @@ data class GuiItem(
             if (item.type == Material.POTION) { // if it's a potion, set the color
                 meta as PotionMeta
                 meta.color = recipe.potionColor?.color
-                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
+                meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
             }
             meta.setDisplayName(Util.colorcode( // display name
                 recipeItemStringHelper(configSec?.getString("display_name"), recipe) ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe")

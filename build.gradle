@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'dev.jsinco.recipes'
-version = '1.15'
+version = '1.16-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,14 +20,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Jsinco:BreweryX:f8dbbff7c4")
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly "com.github.BreweryTeam:BreweryX:3.3.5"
+    compileOnly "org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT"
     compileOnly "net.luckperms:api:5.4"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 shadowJar {
