@@ -3,7 +3,7 @@ package dev.jsinco.recipes.commands.subcommands;
 import com.dre.brewery.BreweryPlugin;
 import dev.jsinco.recipes.Config;
 import dev.jsinco.recipes.Util;
-import dev.jsinco.recipes.commands.SubCommand;
+import dev.jsinco.recipes.commands.AddonSubCommand;
 import dev.jsinco.recipes.guis.RecipeGui;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class GuiCommand implements SubCommand {
+public class GuiCommand implements AddonSubCommand {
 
     @Override
     public void execute(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {

@@ -1,13 +1,12 @@
 package dev.jsinco.recipes.recipe
 
-import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.recipe.BRecipe
 import com.dre.brewery.recipe.PotionColor
 import dev.jsinco.recipes.Recipes
-import org.bukkit.configuration.ConfigurationSection
 
 object RecipeUtil {
-    private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
-    val loadedRecipes: MutableList<Recipe> = mutableListOf()
+
+    private val loadedRecipes: MutableList<Recipe> = mutableListOf()
 
     @JvmStatic
     fun loadAllRecipes() {
@@ -15,9 +14,9 @@ object RecipeUtil {
             loadedRecipes.clear()
             Recipes.getAddonInstance().addonLogger.info("Refreshing loaded recipes!")
         }
-        val configurationSection = plugin.config.getConfigurationSection("recipes") ?: throw RuntimeException("Config section 'recipes' in null in BreweryX's config.yml!")
-        for (recipe in configurationSection.getKeys(false)) {
-            loadedRecipes.add(getRecipeFromKey(recipe))
+
+        for (recipe in BRecipe.getRecipes()) {
+            loadedRecipes.add(getRecipeFromBRecipe(recipe))
         }
     }
 
@@ -27,67 +26,43 @@ object RecipeUtil {
     }
 
     @JvmStatic
-    fun getAllRecipeKeys(): List<String> {
-        val configurationSection = plugin.config.getConfigurationSection("recipes") ?: return emptyList()
-        return configurationSection.getKeys(false).toList()
+    fun getRecipeFromBRecipe(bRecipe: BRecipe): Recipe {
+
+        var cmModelData = 0
+        if (bRecipe.cmData != null && bRecipe.cmData.isNotEmpty()) {
+            cmModelData = bRecipe.cmData[0]
+        }
+
+        return Recipe.Builder()
+            .name(bRecipe.recipeName)
+            .difficulty(bRecipe.difficulty)
+            .cookingTime(bRecipe.cookingTime)
+            .distillRuns(bRecipe.distillruns.toInt())
+            .distillTime(bRecipe.distillTime)
+            .age(bRecipe.age)
+            .woodType(Recipe.BarrelWoodTypes.fromInt(bRecipe.wood.toInt()))
+            .ingredients(parseIngredients(bRecipe.ingredients.map {it.toConfigString()}))
+            .potionColor(PotionColor.fromString(bRecipe.color.toString()))
+            .customModelData(cmModelData)
+            .rarityWeight(bRecipe.difficulty)
+            .build()
     }
 
-    @JvmStatic
-    fun getRecipeFromKey(recipe: String): Recipe {
-        val configurationSection: ConfigurationSection = plugin.config.getConfigurationSection("recipes.$recipe") ?: return Recipe(
-            recipe,
-            "Unknown Recipe",
-            0,
-            0,
-            0,
-            0,
-            0,
-            Recipe.BarrelWoodTypes.ANY,
-            mutableMapOf(),
-            null,
-            0,
-            0
-        )
-
-        val ingredientsRaw = configurationSection.getStringList("ingredients")
+    fun parseIngredients(ingredientsRaw: List<String>): Map<String, Int> {
         val ingredientsMap: MutableMap<String, Int> = mutableMapOf()
         for (ingredientRaw in ingredientsRaw) {
             ingredientsMap[ingredientRaw.substringBefore("/")] = ingredientRaw.substringAfter("/").toInt()
         }
-
-        var woodType: Recipe.BarrelWoodTypes = Recipe.BarrelWoodTypes.ANY
-        if (configurationSection.contains("wood")) {
-            for (woodNum in Recipe.BarrelWoodTypes.entries.map { it.woodNumber }) {
-                if (configurationSection.getInt("wood") == woodNum) {
-                    woodType = Recipe.BarrelWoodTypes.entries.first { it.woodNumber == woodNum }
-                    break
-                }
-            }
-        }
-
-
-        return Recipe(
-            recipe,
-
-            configurationSection.getString("name") ?: "Unnamed Recipe",
-            configurationSection.getInt("difficulty"),
-            configurationSection.getInt("cookingtime"),
-            configurationSection.getInt("distillruns"),
-            if (configurationSection.contains("distilltime")) configurationSection.getInt("distilltime") else 40,
-            configurationSection.getInt("age"),
-            woodType,
-
-            ingredientsMap,
-
-            if (configurationSection.contains("color")) PotionColor.fromString(configurationSection.getString("color") ?: "PINK") else null,
-            parseRecipeName(configurationSection.getString("customModelData") ?: "0").toIntOrNull() ?: 0,
-            if (configurationSection.contains("rarity_weight")) configurationSection.getInt("rarity_weight") else configurationSection.getInt("difficulty")
-        )
+        return ingredientsMap
     }
-
 
     fun getRandomRecipe(): Recipe {
         return getAllRecipes().random()
+    }
+
+    @JvmStatic
+    fun getRecipeFromKey(recipeKey: String): Recipe? {
+        return getAllRecipes().find { it.recipeKey == recipeKey }
     }
 
 

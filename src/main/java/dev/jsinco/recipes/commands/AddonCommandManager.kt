@@ -1,6 +1,8 @@
 package dev.jsinco.recipes.commands
 
 import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.commands.SubCommand
+import com.dre.brewery.configuration.files.Lang
 import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.commands.subcommands.GiveBook
 import dev.jsinco.recipes.commands.subcommands.GiveRecipeItem
@@ -9,9 +11,9 @@ import dev.jsinco.recipes.commands.subcommands.OpenRecipeBookCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
-class AddonCommandManager(val plugin: BreweryPlugin) : com.dre.brewery.commands.SubCommand {
+class AddonCommandManager(val plugin: BreweryPlugin) : SubCommand {
 
-    private val commands: Map<String, SubCommand> = mapOf(
+    private val commands: Map<String, AddonSubCommand> = mapOf(
         "give" to GiveRecipeItem(),
         "givebook" to GiveBook(),
         "gui" to GuiCommand(),
@@ -19,7 +21,7 @@ class AddonCommandManager(val plugin: BreweryPlugin) : com.dre.brewery.commands.
     )
 
 
-    override fun execute(plugin: BreweryPlugin, sender: CommandSender, label: String, args: Array<out String>) {
+    override fun execute(plugin: BreweryPlugin, lang: Lang, sender: CommandSender, label: String, args: Array<out String>) {
         val argsAsMutable = args.toMutableList()
         argsAsMutable.removeAt(0)
         val finalArgs = argsAsMutable.toList().toTypedArray()

@@ -4,6 +4,7 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.addons.AddonFileManager;
 import com.dre.brewery.api.addons.AddonInfo;
 import com.dre.brewery.api.addons.BreweryAddon;
+import com.dre.brewery.commands.CommandManager;
 import com.dre.brewery.utility.MinecraftVersion;
 import dev.jsinco.recipes.commands.AddonCommandManager;
 import dev.jsinco.recipes.listeners.Events;
@@ -23,7 +24,7 @@ import org.bukkit.event.HandlerList;
 
 @AddonInfo(
         author = "Jsinco",
-        version = "1.15",
+        version = "1.16",
         description = "A unique way to collect and view recipes for brews",
         name = "Recipes"
 )
@@ -68,7 +69,7 @@ public class Recipes extends BreweryAddon {
         com.dre.brewery.commands.CommandManager.addSubCommand("recipes", new AddonCommandManager(getBreweryPlugin()));
 
         RecipeUtil.loadAllRecipes();
-        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from Brewery!");
 
         LazyConfigUpdater configUpdater = new LazyConfigUpdater();
         if (configUpdater.isConfigOutdated()) {
@@ -81,7 +82,7 @@ public class Recipes extends BreweryAddon {
         if (events != null) {
             HandlerList.unregisterAll(events);
         }
-        com.dre.brewery.commands.CommandManager.removeSubCommand("recipes");
+        CommandManager.removeSubCommand("recipes");
         getAddonLogger().info("Recipes addon disabled.");
     }
 
@@ -90,7 +91,7 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         RecipeUtil.loadAllRecipes();
         Util.reloadPrefix();
-        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipeKeys().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from Brewery!");
     }
 
     public static AddonFileManager fileManager() {

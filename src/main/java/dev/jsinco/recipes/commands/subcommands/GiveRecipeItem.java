@@ -3,7 +3,7 @@ package dev.jsinco.recipes.commands.subcommands;
 import com.dre.brewery.BreweryPlugin;
 import dev.jsinco.recipes.Config;
 import dev.jsinco.recipes.Util;
-import dev.jsinco.recipes.commands.SubCommand;
+import dev.jsinco.recipes.commands.AddonSubCommand;
 import dev.jsinco.recipes.recipe.Recipe;
 import dev.jsinco.recipes.recipe.RecipeItem;
 import dev.jsinco.recipes.recipe.RecipeUtil;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class GiveRecipeItem implements SubCommand {
+public class GiveRecipeItem implements AddonSubCommand {
     @Override
     public void execute(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
@@ -26,6 +26,10 @@ public class GiveRecipeItem implements SubCommand {
 
 
         Recipe recipe = RecipeUtil.getRecipeFromKey(args[1]);
+        if (recipe == null) {
+            sender.sendMessage(Util.colorcode("&cRecipe not found"));
+            return;
+        }
         ItemStack recipeItem = new RecipeItem(recipe).getItem();
 
         Util.giveItem(player, recipeItem);
@@ -34,7 +38,7 @@ public class GiveRecipeItem implements SubCommand {
     @Nullable
     @Override
     public List<String> tabComplete(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        return RecipeUtil.getAllRecipeKeys();
+        return RecipeUtil.getAllRecipes().stream().map(Recipe::getRecipeKey).toList();
     }
 
     @NotNull
