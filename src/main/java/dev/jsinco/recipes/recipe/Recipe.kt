@@ -1,5 +1,6 @@
 package dev.jsinco.recipes.recipe
 
+import com.dre.brewery.BarrelWoodType
 import com.dre.brewery.recipe.PotionColor
 
 // We're not using BreweryX's BRecipe class because it has a bunch of extra stuff that we don't need
@@ -12,7 +13,7 @@ data class Recipe (
     val distillRuns: Int,
     val distillTime: Int,
     val age: Int,
-    val woodType: BarrelWoodTypes,
+    val woodType: BarrelWoodType,
 
     val ingredients: Map<String, Int>,
 
@@ -29,7 +30,7 @@ data class Recipe (
         private var distillRuns: Int = 0
         private var distillTime: Int = 0
         private var age: Int = 0
-        private var woodType: BarrelWoodTypes = BarrelWoodTypes.ANY
+        private var woodType: BarrelWoodType = BarrelWoodType.ANY
         private var ingredients: Map<String, Int> = emptyMap()
         private var potionColor: PotionColor? = null
         private var customModelData: Int = 0
@@ -42,7 +43,7 @@ data class Recipe (
         fun distillRuns(distillRuns: Int) = apply { this.distillRuns = distillRuns }
         fun distillTime(distillTime: Int) = apply { this.distillTime = distillTime }
         fun age(age: Int) = apply { this.age = age }
-        fun woodType(woodType: BarrelWoodTypes) = apply { this.woodType = woodType }
+        fun woodType(woodType: BarrelWoodType) = apply { this.woodType = woodType }
         fun ingredients(ingredients: Map<String, Int>) = apply { this.ingredients = ingredients }
         fun potionColor(potionColor: PotionColor?) = apply { this.potionColor = potionColor }
         fun customModelData(customModelData: Int) = apply { this.customModelData = customModelData }
@@ -51,24 +52,4 @@ data class Recipe (
         fun build() = Recipe(recipeKey, name, difficulty, cookingTime, distillRuns, distillTime, age, woodType, ingredients, potionColor, customModelData, rarityWeight)
     }
 
-    enum class BarrelWoodTypes(val woodNumber: Int) {
-        ANY(0),
-        BIRCH(1),
-        OAK(2),
-        JUNGLE(3),
-        SPRUCE(4),
-        ACACIA(5),
-        DARK_OAK(6),
-        CRIMSON(7),
-        WARPED(8),
-        MANGROVE(9),
-        CHERRY(10),
-        BAMBOO(11);
-
-        companion object {
-            fun fromInt(woodNumber: Int): BarrelWoodTypes {
-                return entries.firstOrNull { it.woodNumber == woodNumber } ?: ANY
-            }
-        }
-    }
 }

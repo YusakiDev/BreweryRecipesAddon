@@ -2,6 +2,7 @@ package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
+import com.dre.brewery.utility.MaterialUtil
 import dev.jsinco.recipes.Config
 import dev.jsinco.recipes.Util
 import org.bukkit.NamespacedKey
@@ -16,7 +17,7 @@ class RecipeItem (recipe: Recipe) {
         private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
     }
 
-    val item = ItemStack(BUtil.getMaterialSafely(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))
+    val item = ItemStack(MaterialUtil.getMaterialSafely(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))
 
     init {
         val meta = item.itemMeta!!

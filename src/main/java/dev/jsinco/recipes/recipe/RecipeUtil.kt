@@ -40,7 +40,7 @@ object RecipeUtil {
             .distillRuns(bRecipe.distillruns.toInt())
             .distillTime(bRecipe.distillTime)
             .age(bRecipe.age)
-            .woodType(Recipe.BarrelWoodTypes.fromInt(bRecipe.wood.toInt()))
+            .woodType(bRecipe.wood)
             .ingredients(parseIngredients(bRecipe.ingredients.map {it.toConfigString()}))
             .potionColor(PotionColor.fromString(bRecipe.color.toString()))
             .customModelData(cmModelData)
