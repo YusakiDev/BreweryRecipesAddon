@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.jsinco.recipes'
-version = '1.17-SNAPSHOT'
+version = 'BX3.4.3'
 
 repositories {
     mavenCentral()
@@ -16,10 +16,14 @@ repositories {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
+    maven {
+        name = "jsinco-repo"
+        url = "https://repo.jsinco.dev/releases"
+    }
 }
 
 dependencies {
-    compileOnly("com.github.BreweryTeam:BreweryX:snapshot-SNAPSHOT")
+    compileOnly("com.dre.brewery:BreweryX:3.4.3-SNAPSHOT")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly "net.luckperms:api:5.4"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

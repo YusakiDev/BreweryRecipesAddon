@@ -2,6 +2,7 @@ package dev.jsinco.recipes
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
+import com.dre.brewery.utility.MaterialUtil
 import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
@@ -88,7 +89,7 @@ object Util {
 
     @JvmStatic
     fun getRecipeBookItem(): ItemStack {
-        val item = ItemStack(BUtil.getMaterialSafely(Config.get().getString("recipe-book-item.material") ?: "BOOK"))
+        val item = ItemStack(MaterialUtil.getMaterialSafely(Config.get().getString("recipe-book-item.material") ?: "BOOK"))
         val meta = item.itemMeta ?: return item
         meta.setDisplayName(colorcode(Config.get().getString("recipe-book-item.display_name") ?: "&6&lRecipe Book"))
         meta.lore = colorArrayList(Config.get().getStringList("recipe-book-item.lore"))

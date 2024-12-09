@@ -24,7 +24,7 @@ import org.bukkit.event.HandlerList;
 
 @AddonInfo(
         author = "Jsinco",
-        version = "1.17-SNAPSHOT",
+        version = "BX3.4.3",
         description = "A unique way to collect and view recipes for brews",
         name = "Recipes"
 )

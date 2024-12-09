@@ -2,6 +2,7 @@ package dev.jsinco.recipes.guis
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
+import com.dre.brewery.utility.MaterialUtil
 import dev.jsinco.recipes.Config
 import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.recipe.Recipe
@@ -50,7 +51,7 @@ data class GuiItem(
 
         fun createRecipeGuiItem(recipe: Recipe): ItemStack {
             val configSec = Config.get().getConfigurationSection("gui.items.recipe-gui-item")
-            val item = ItemStack(BUtil.getMaterialSafely(configSec?.getString("material") ?: "PAPER"))
+            val item = ItemStack(MaterialUtil.getMaterialSafely(configSec?.getString("material") ?: "PAPER"))
             val meta = item.itemMeta ?: return item
 
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
@@ -122,7 +123,7 @@ data class GuiItem(
         }
 
         private fun getGUIItem(string: String): GuiItem {
-            return GuiItem(BUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "MAP"),
+            return GuiItem(MaterialUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "MAP"),
                 Config.get().getIntegerList("gui.$string.slots"),
                 Config.get().getString("gui.$string.display_name") ?: " ",
                 Config.get().getStringList("gui.$string.lore"),
