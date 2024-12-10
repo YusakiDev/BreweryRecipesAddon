@@ -34,6 +34,7 @@ object RecipeUtil {
         }
 
         return Recipe.Builder()
+            .recipeKey(bRecipe.id)
             .name(bRecipe.recipeName)
             .difficulty(bRecipe.difficulty)
             .cookingTime(bRecipe.cookingTime)

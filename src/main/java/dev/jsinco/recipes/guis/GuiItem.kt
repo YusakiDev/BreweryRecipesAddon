@@ -123,7 +123,7 @@ data class GuiItem(
         }
 
         private fun getGUIItem(string: String): GuiItem {
-            return GuiItem(MaterialUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "MAP"),
+            return GuiItem(MaterialUtil.getMaterialSafely(Config.get().getString("gui.$string.material") ?: "MAP") ?: Material.MAP,
                 Config.get().getIntegerList("gui.$string.slots"),
                 Config.get().getString("gui.$string.display_name") ?: " ",
                 Config.get().getStringList("gui.$string.lore"),
