@@ -24,7 +24,7 @@ import org.bukkit.event.HandlerList;
 
 @AddonInfo(
         author = "Jsinco",
-        version = "BX3.4.3",
+        version = "BX3.4.4",
         description = "A unique way to collect and view recipes for brews",
         name = "Recipes"
 )
@@ -69,7 +69,7 @@ public class Recipes extends BreweryAddon {
         com.dre.brewery.commands.CommandManager.addSubCommand("recipes", new AddonCommandManager(getBreweryPlugin()));
 
         RecipeUtil.loadAllRecipes();
-        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from BreweryX!");
 
         LazyConfigUpdater configUpdater = new LazyConfigUpdater();
         if (configUpdater.isConfigOutdated()) {
@@ -91,7 +91,7 @@ public class Recipes extends BreweryAddon {
         Config.reload();
         RecipeUtil.loadAllRecipes();
         Util.reloadPrefix();
-        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from Brewery!");
+        getAddonLogger().info("Loaded &a" + RecipeUtil.getAllRecipes().size() + " &rrecipes from BreweryX!");
     }
 
     public static AddonFileManager fileManager() {
