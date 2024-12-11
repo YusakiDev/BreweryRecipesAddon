@@ -9,10 +9,6 @@ version = 'BX3.4.4'
 repositories {
     mavenCentral()
     maven {
-        name = "jitpack"
-        url = "https://jitpack.io"
-    }
-    maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }

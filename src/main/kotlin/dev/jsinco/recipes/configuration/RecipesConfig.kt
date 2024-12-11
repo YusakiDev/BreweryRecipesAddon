@@ -45,7 +45,7 @@ class RecipesConfig : AddonConfigFile() {
     @CustomKey("learn-recipe-upon-creation")
     @Comment("If true, the player will automatically learn the recipe when they create it for the first time",
         "Either by brewing the recipe or by receiving the brew via command")
-    var learnRecipeUponCreation: Boolean = true
+    var learnRecipeUponCreation: Boolean = false
 
     @CustomKey("recipe-spawning")
     @Comment("Recipes spawn in loot chests randomly throughout the world",
