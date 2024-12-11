@@ -34,6 +34,12 @@ class RecipeGui(player: Player) : InventoryHolder {
             totalRecipes++
         }
 
+        // Sort the recipeGuiItems alphabetically based on their display name
+        recipeGuiItems.sortBy { itemStack ->
+            val meta = itemStack.itemMeta
+            meta?.displayName ?: ""
+        }
+
         val totalRecipesItem = GuiItem.getTotalRecipesItem(totalRecipes, recipes.size)
         for (slot in totalRecipesItem.first) {
             inv.setItem(slot, totalRecipesItem.second)
