@@ -1,5 +1,6 @@
 package dev.jsinco.recipes.guis
 
+import com.dre.brewery.utility.BUtil
 import dev.jsinco.recipes.Util
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
@@ -39,7 +40,7 @@ class PaginatedGui (
     }
 
     private fun newPage(): Inventory {
-        val inventory: Inventory = Bukkit.createInventory(base.holder, base.size, Util.colorcode(name))
+        val inventory: Inventory = Bukkit.createInventory(base.holder, base.size, BUtil.color(name))
         for (i in 0 until base.size) {
             inventory.setItem(i, base.getItem(i))
         }

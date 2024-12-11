@@ -1,8 +1,10 @@
 package dev.jsinco.recipes.listeners
 
 import com.dre.brewery.BreweryPlugin
-import dev.jsinco.recipes.Config
+import com.dre.brewery.api.events.brew.BrewModifyEvent
+import com.dre.brewery.utility.Logging
 import dev.jsinco.recipes.Recipes
+import dev.jsinco.recipes.configuration.RecipesConfig
 import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.guis.GuiItemType
 import dev.jsinco.recipes.guis.PaginatedGui
@@ -26,9 +28,10 @@ import kotlin.random.Random
 
 class Events(private val plugin: BreweryPlugin) : Listener {
 
+    private val config: RecipesConfig = Recipes.configManager.getConfig(RecipesConfig::class.java)
+
     private val BOOK_KEY = NamespacedKey(plugin, "recipe-book")
     private val LEGACY_BOOK_KEY = NamespacedKey("brewery", "recipe-book")
-
     private val RECIPE_KEY = NamespacedKey(plugin, "recipe-key")
     private val LEGACY_RECIPE_KEY = NamespacedKey("brewery", "recipe-key")
 
@@ -61,13 +64,13 @@ class Events(private val plugin: BreweryPlugin) : Listener {
 
     @EventHandler
     fun onLootGenerate(event: LootGenerateEvent) {
-        val bound = Config.get().getInt("recipe-spawning.bound")
-        val chance = Config.get().getInt("recipe-spawning.chance")
+        val bound = config.recipeSpawning.bound
+        val chance = config.recipeSpawning.chance
         if (bound <= 0 || chance <= 0) return
         else if (Random.nextInt(bound) > chance) return
 
         var recipe: Recipe = RecipeUtil.getRandomRecipe()
-        while (Config.get().getStringList("recipe-spawning.blacklisted-recipes").contains(recipe.recipeKey)) {
+        while (config.recipeSpawning.blacklistedRecipes.contains(recipe.recipeKey)) {
             recipe = RecipeUtil.getRandomRecipe()
         }
         event.loot.add(RecipeItem(recipe).item)
@@ -88,21 +91,38 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         if (recipeKey == null) {
             recipeKey = meta.persistentDataContainer.get(LEGACY_RECIPE_KEY, PersistentDataType.STRING)
         }
-        if (recipeKey == null) return
+        val recipeObj: Recipe = RecipeUtil.getRecipeFromKey(recipeKey ?: return) ?: return
         event.isCancelled = true
 
-        val msgs = Config.get().getConfigurationSection("messages")
-
         if (Util.checkForRecipePermission(player, recipeKey)) {
-            player.sendMessage(Util.colorcode(Util.prefix + (msgs?.getString("already-learned") ?: "You already know this recipe!")))
+            Logging.msg(player, config.messages.alreadyLearned)
             return
         }
 
         event.item!!.amount--
-        player.sendMessage(Util.colorcode(Util.prefix + String.format((msgs?.getString("learned") ?: "You have learned the '%s'!"), meta.displayName)))
+
+        Recipes.permissionManager.setPermission(config.recipePermissionNode.replace("%recipe%", recipeKey), player, true)
+        Logging.msg(player, config.messages.learned.replace("%recipe%", recipeObj.name))
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+    }
 
+    @EventHandler
+    fun onBrewModify(event: BrewModifyEvent) {
+        val player = event.player ?: return
 
-        Recipes.getPermissionManager().setPermission(Config.get().getString("recipe-permission-node")?.replace("%recipe%", recipeKey), player, true)
+        if (!config.learnRecipeUponCreation || (event.type != BrewModifyEvent.Type.FILL && event.type != BrewModifyEvent.Type.CREATE)) {
+            return
+        }
+
+        val bRecipe = event.brew.currentRecipe
+        val recipeKey: String = bRecipe.id
+
+        if (Util.checkForRecipePermission(player, recipeKey)) {
+            return
+        }
+
+        Recipes.permissionManager.setPermission(config.recipePermissionNode.replace("%recipe%", recipeKey), player, true)
+        Logging.msg(player, config.messages.learned.replace("%recipe%", bRecipe.recipeName))
+        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
 }

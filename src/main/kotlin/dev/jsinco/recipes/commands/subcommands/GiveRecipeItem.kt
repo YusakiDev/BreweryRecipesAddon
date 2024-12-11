@@ -1,49 +1,54 @@
-package dev.jsinco.recipes.commands.subcommands;
+package dev.jsinco.recipes.commands.subcommands
 
-import com.dre.brewery.BreweryPlugin;
-import dev.jsinco.recipes.Config;
-import dev.jsinco.recipes.Util;
-import dev.jsinco.recipes.commands.AddonSubCommand;
-import dev.jsinco.recipes.recipe.Recipe;
-import dev.jsinco.recipes.recipe.RecipeItem;
-import dev.jsinco.recipes.recipe.RecipeUtil;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.utility.Logging
+import dev.jsinco.recipes.Util.giveItem
+import dev.jsinco.recipes.commands.AddonSubCommand
+import dev.jsinco.recipes.recipe.Recipe
+import dev.jsinco.recipes.recipe.RecipeItem
+import dev.jsinco.recipes.recipe.RecipeUtil.getAllRecipes
+import dev.jsinco.recipes.recipe.RecipeUtil.getRecipeFromKey
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-import java.util.Objects;
-
-public class GiveRecipeItem implements AddonSubCommand {
-    @Override
-    public void execute(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Util.colorcode("&cOnly players can use this command (Give yourself a specific recipe item)"));
-            return;
+class GiveRecipeItem : AddonSubCommand {
+    override fun execute(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>) {
+        val player = if (sender is Player) {
+            sender
+        } else if (args.size >= 3) {
+            Bukkit.getPlayerExact(args[2]) ?: run {
+                Logging.msg(sender, "Player not found")
+                return
+            }
+        } else {
+            Logging.msg(sender, "Specify a player to give the item to /brewery recipes give <recipe> <player>")
+            return
         }
 
 
-        Recipe recipe = RecipeUtil.getRecipeFromKey(args[1]);
+        val recipe = getRecipeFromKey(args[1])
         if (recipe == null) {
-            sender.sendMessage(Util.colorcode("&cRecipe not found"));
-            return;
+            Logging.msg(sender, "Recipe not found")
+            return
         }
-        ItemStack recipeItem = new RecipeItem(recipe).getItem();
+        val recipeItem = RecipeItem(recipe).item
 
-        Util.giveItem(player, recipeItem);
+        giveItem(player, recipeItem)
     }
 
-    @Nullable
-    @Override
-    public List<String> tabComplete(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        return RecipeUtil.getAllRecipes().stream().map(Recipe::getRecipeKey).toList();
+    override fun tabComplete(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>): List<String>? {
+        if (args.size == 2) {
+            return getAllRecipes().stream().map(Recipe::recipeKey).toList()
+        }
+        return null
     }
 
-    @NotNull
-    @Override
-    public String getPermission() {
-        return Objects.requireNonNullElse(Config.get().getString("command-permissions.give"), "breweryrecipes.give");
+    override fun getPermission(): String {
+        return "brewery.recipesaddon.cmd.give"
+    }
+
+    override fun playerOnly(): Boolean {
+        return false
     }
 }

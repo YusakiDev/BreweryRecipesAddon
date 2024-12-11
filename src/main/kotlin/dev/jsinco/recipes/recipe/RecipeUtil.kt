@@ -12,12 +12,13 @@ object RecipeUtil {
     fun loadAllRecipes() {
         if (loadedRecipes.isNotEmpty()) {
             loadedRecipes.clear()
-            Recipes.getAddonInstance().addonLogger.info("Refreshing loaded recipes!")
+            Recipes.addon.addonLogger.info("Refreshing loaded recipes!")
         }
 
         for (recipe in BRecipe.getRecipes()) {
             loadedRecipes.add(getRecipeFromBRecipe(recipe))
         }
+        Recipes.addon.addonLogger.info("Loaded ${loadedRecipes.size} recipes from BreweryX!")
     }
 
     @JvmStatic

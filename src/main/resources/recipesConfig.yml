@@ -22,7 +22,7 @@ permissions-api-plugin: LuckPerms
 permission-command: "lp user %player% permission set %permission% %boolean%"
 permission-unset-command: "lp user %player% permission unset %permission%"
 
-# PLACEHOLDERS: %recipe% - The recipe's key in the config with spaces replaces as underscores "_"
+# PLACEHOLDERS: %recipe% - The recipe's key in the config with spaces replaced as underscores "_"
 recipe-permission-node: "breweryrecipes.recipe.%recipe%"
 
 # Recipes spawn in loot chests randomly throughout the world

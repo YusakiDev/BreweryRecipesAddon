@@ -2,9 +2,10 @@ package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
-import com.dre.brewery.utility.MaterialUtil
-import dev.jsinco.recipes.Config
+import dev.jsinco.recipes.Recipes
+import dev.jsinco.recipes.configuration.RecipesConfig
 import dev.jsinco.recipes.Util
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
@@ -17,16 +18,18 @@ class RecipeItem (recipe: Recipe) {
         private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
     }
 
-    val item = ItemStack(MaterialUtil.getMaterialSafely(Config.get().getString("recipe-item.material")?.uppercase() ?: "PAPER"))
+    private val config: RecipesConfig = Recipes.configManager.getConfig(RecipesConfig::class.java)
+
+    val item = ItemStack(config.recipeItem.material ?: Material.PAPER)
 
     init {
         val meta = item.itemMeta!!
 
-        meta.setDisplayName(Util.colorcode(Config.get().getString("recipe-item.name")?.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name))
+        meta.setDisplayName(BUtil.color(config.recipeItem.name?.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name))
             ?: "&#F7FFC9${RecipeUtil.parseRecipeName(recipe.name)} &fRecipe"))
-        meta.lore = Util.colorArrayList(Config.get().getStringList("recipe-item.lore").map { it.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name)) })
+        meta.lore = Util.colorArrayList(config.recipeItem.lore?.map { it.replace("%recipe%", RecipeUtil.parseRecipeName(recipe.name)) } ?: listOf())
         meta.persistentDataContainer.set(NamespacedKey(plugin, "recipe-key"), PersistentDataType.STRING, recipe.recipeKey)
-        if (Config.get().getBoolean("recipe-item.glint")) {
+        if (config.recipeItem.glint == true) {
             meta.addEnchant(Enchantment.MENDING, 1, true)
         }
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)

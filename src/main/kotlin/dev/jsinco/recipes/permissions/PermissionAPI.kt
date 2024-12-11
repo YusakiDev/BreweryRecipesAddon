@@ -1,17 +1,11 @@
-package dev.jsinco.recipes.permissions;
+package dev.jsinco.recipes.permissions
 
-import org.bukkit.Bukkit;
+import org.bukkit.Bukkit
 
-public enum PermissionAPI {
+enum class PermissionAPI(private val pluginName: String) {
     LUCKPERMS("LuckPerms");
 
-    private final String pluginName;
-
-    PermissionAPI(String pluginName) {
-        this.pluginName = pluginName;
-    }
-
-    public boolean checkIfPermissionPluginExists() {
-        return Bukkit.getPluginManager().getPlugin(pluginName) != null;
+    fun checkIfPermissionPluginExists(): Boolean {
+        return Bukkit.getPluginManager().getPlugin(pluginName) != null
     }
 }

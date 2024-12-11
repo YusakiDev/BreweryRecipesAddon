@@ -10,4 +10,5 @@ interface AddonSubCommand {
 
     fun getPermission(): String
 
+    fun playerOnly(): Boolean
 }

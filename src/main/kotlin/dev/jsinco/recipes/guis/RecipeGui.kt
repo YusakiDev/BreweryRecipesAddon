@@ -1,6 +1,8 @@
 package dev.jsinco.recipes.guis
 
-import dev.jsinco.recipes.Config
+import com.dre.brewery.utility.BUtil
+import dev.jsinco.recipes.Recipes
+import dev.jsinco.recipes.configuration.RecipesConfig
 import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeUtil
@@ -11,8 +13,8 @@ import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 
 class RecipeGui(player: Player) : InventoryHolder {
-
-    private val inv: Inventory = Bukkit.createInventory(this, Config.get().getInt("gui.size"), Config.get().getString("gui.title") ?: "Recipes")
+    private val config: RecipesConfig = Recipes.configManager.getConfig(RecipesConfig::class.java)
+    private val inv: Inventory = Bukkit.createInventory(this, config.gui.size, "Recipes")
     private val recipeGuiItems: MutableList<ItemStack> = mutableListOf()
 
     init {
@@ -38,7 +40,7 @@ class RecipeGui(player: Player) : InventoryHolder {
         }
     }
     //
-    val paginatedGui: PaginatedGui = PaginatedGui(Config.get().getString("gui.title") ?: "Recipes", inv, recipeGuiItems, Config.get().getIntegerList("gui.items.recipe-gui-item.slots"))
+    val paginatedGui: PaginatedGui = PaginatedGui(BUtil.color(config.gui.title), inv, recipeGuiItems, config.gui.items.recipeGuiItem.slots)
 
     init {
         val arrowItems = GuiItem.getPageArrowItems()

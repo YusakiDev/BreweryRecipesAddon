@@ -1,51 +1,40 @@
-package dev.jsinco.recipes.commands.subcommands;
+package dev.jsinco.recipes.commands.subcommands
 
-import com.dre.brewery.BreweryPlugin;
-import dev.jsinco.recipes.Config;
-import dev.jsinco.recipes.Util;
-import dev.jsinco.recipes.commands.AddonSubCommand;
-import dev.jsinco.recipes.guis.RecipeGui;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.utility.Logging
+import dev.jsinco.recipes.commands.AddonSubCommand
+import dev.jsinco.recipes.guis.RecipeGui
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-import java.util.List;
-import java.util.Objects;
+class GuiCommand : AddonSubCommand {
 
-public class GuiCommand implements AddonSubCommand {
-
-    @Override
-    public void execute(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        if (args.length < 2) {
-            sender.sendMessage(Util.colorcode("&cUsage: /breweryrecipes gui <player> (Open the recipe GUI of a player)"));
-            return;
-        }
-        if (!(sender instanceof Player viewer)) {
-            sender.sendMessage(Util.colorcode("&cOnly players can use this command (Open the recipe GUI of a player)"));
-            return;
+    override fun execute(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>) {
+        if (args.size < 2) {
+            Logging.msg(sender, "Usage: /brewery recipes gui <player> (Open the recipe GUI of a player)")
+            return
         }
 
-        Player player = Bukkit.getPlayerExact(args[1]);
+        val player = Bukkit.getPlayerExact(args[1])
         if (player == null) {
-            sender.sendMessage(Util.colorcode("&cPlayer not found"));
-            return;
+            Logging.msg(sender, "&cPlayer not found")
+            return
         }
 
-        RecipeGui recipeGui = new RecipeGui(player);
-        recipeGui.openRecipeGui(viewer);
+        val recipeGui = RecipeGui(player)
+        recipeGui.openRecipeGui(sender as Player)
     }
 
-    @Nullable
-    @Override
-    public List<String> tabComplete(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        return null;
+    override fun tabComplete(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>): List<String>? {
+        return null
     }
 
-    @NotNull
-    @Override
-    public String getPermission() {
-        return Objects.requireNonNullElse(Config.get().getString("command-permissions.gui"), "breweryrecipes.gui");
+    override fun getPermission(): String {
+        return "brewery.recipesaddon.cmd.gui"
+    }
+
+    override fun playerOnly(): Boolean {
+        return true
     }
 }

@@ -1,10 +1,9 @@
-package dev.jsinco.recipes.permissions;
+package dev.jsinco.recipes.permissions
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Player
 
-public interface PermissionManager {
+interface PermissionManager {
+    fun setPermission(permission: String, player: Player, value: Boolean)
 
-    void setPermission(String permission, Player player, boolean value);
-
-    void removePermission(String permission, Player player);
+    fun removePermission(permission: String, player: Player)
 }

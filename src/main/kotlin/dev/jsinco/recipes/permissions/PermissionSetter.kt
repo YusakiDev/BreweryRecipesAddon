@@ -1,6 +1,6 @@
-package dev.jsinco.recipes.permissions;
+package dev.jsinco.recipes.permissions
 
-public enum PermissionSetter {
-    PERMISSION_API,
+enum class PermissionSetter {
+    LUCKPERMS,
     COMMAND
 }

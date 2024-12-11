@@ -1,35 +1,31 @@
-package dev.jsinco.recipes.permissions;
+package dev.jsinco.recipes.permissions
 
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
+import net.luckperms.api.LuckPerms
+import net.luckperms.api.node.Node
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
-public class LuckPermsPermission implements PermissionManager {
-    @Override
-    public void setPermission(String permission, Player player, boolean value) {
-        Node node = Node.builder(permission).value(value).build();
-        User user = getLuckPermsInstance().getUserManager().getUser(player.getUniqueId());
-        assert user != null;
-        user.data().add(node);
-        getLuckPermsInstance().getUserManager().saveUser(user);
+class LuckPermsPermission : PermissionManager {
+
+
+    private val luckPermsInstance: LuckPerms = run {
+        val rsp = Bukkit.getServicesManager().getRegistration(LuckPerms::class.java)
+        checkNotNull(rsp) { "LuckPerms is not installed on this server!" }
+        rsp.provider
     }
 
-    @Override
-    public void removePermission(String permission, Player player) {
-        User user = getLuckPermsInstance().getUserManager().getUser(player.getUniqueId());
-        assert user != null;
-        user.data().remove(Node.builder(permission).build());
-        getLuckPermsInstance().getUserManager().saveUser(user);
+    override fun setPermission(permission: String, player: Player, value: Boolean) {
+        val node: Node = Node.builder(permission).value(value).build()
+        val user = checkNotNull(luckPermsInstance.userManager.getUser(player.uniqueId))
+        user.data().add(node)
+        luckPermsInstance.userManager.saveUser(user)
     }
 
-    public LuckPerms getLuckPermsInstance() {
-        RegisteredServiceProvider<LuckPerms> rsp = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-        if (rsp == null) {
-            throw new IllegalStateException("LuckPerms is not installed on the server!");
-        }
-        return rsp.getProvider();
+    override fun removePermission(permission: String, player: Player) {
+        val user = checkNotNull(luckPermsInstance.userManager.getUser(player.uniqueId))
+        user.data().remove(Node.builder(permission).build())
+        luckPermsInstance.userManager.saveUser(user)
     }
+
+
 }

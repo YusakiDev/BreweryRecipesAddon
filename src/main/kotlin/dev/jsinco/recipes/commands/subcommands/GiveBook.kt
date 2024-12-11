@@ -1,42 +1,35 @@
-package dev.jsinco.recipes.commands.subcommands;
+package dev.jsinco.recipes.commands.subcommands
 
-import com.dre.brewery.BreweryPlugin;
-import dev.jsinco.recipes.Config;
-import dev.jsinco.recipes.Util;
-import dev.jsinco.recipes.commands.AddonSubCommand;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.dre.brewery.BreweryPlugin
+import com.dre.brewery.utility.Logging
+import dev.jsinco.recipes.Util.getRecipeBookItem
+import dev.jsinco.recipes.Util.giveItem
+import dev.jsinco.recipes.commands.AddonSubCommand
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 
-import java.util.List;
-import java.util.Objects;
-
-public class GiveBook implements AddonSubCommand {
-
-    @Override
-    public void execute(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        if (args.length < 2) {
-            sender.sendMessage(Util.colorcode("&cUsage: /breweryrecipes givebook <player> (Give a player the recipe book)"));
-            return;
+class GiveBook : AddonSubCommand {
+    override fun execute(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>) {
+        if (args.size < 2) {
+            Logging.msg(sender, "Usage: /brewery recipes givebook <player> (Give a player the recipe book)")
+            return
         }
 
-        Player player = Bukkit.getPlayerExact(args[1]);
+        val player = Bukkit.getPlayerExact(args[1])
         if (player != null) {
-            Util.giveItem(player, Util.getRecipeBookItem());
+            giveItem(player, getRecipeBookItem())
         }
     }
 
-    @Nullable
-    @Override
-    public List<String> tabComplete(@NotNull BreweryPlugin plugin, @NotNull CommandSender sender, @NotNull String[] args) {
-        return null;
+    override fun tabComplete(plugin: BreweryPlugin, sender: CommandSender, args: Array<out String>): List<String>? {
+        return null
     }
 
-    @NotNull
-    @Override
-    public String getPermission() {
-        return Objects.requireNonNullElse(Config.get().getString("command-permissions.givebook"), "breweryrecipes.givebook");
+    override fun getPermission(): String {
+        return "brewery.recipesaddon.cmd.givebook"
+    }
+
+    override fun playerOnly(): Boolean {
+        return false
     }
 }
