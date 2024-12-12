@@ -7,6 +7,7 @@ import dev.jsinco.recipes.Util
 import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeUtil
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -37,7 +38,7 @@ class RecipeGui(player: Player) : InventoryHolder {
         // Sort the recipeGuiItems alphabetically based on their display name
         recipeGuiItems.sortBy { itemStack ->
             val meta = itemStack.itemMeta
-            meta?.displayName ?: ""
+            ChatColor.stripColor(meta?.displayName ?: "")
         }
 
         val totalRecipesItem = GuiItem.getTotalRecipesItem(totalRecipes, recipes.size)
