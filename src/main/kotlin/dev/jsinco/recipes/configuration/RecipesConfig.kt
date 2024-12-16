@@ -133,6 +133,8 @@ class RecipesConfig : AddonConfigFile() {
                     "&fAge&7: &#F7FFC9%age%yrs &f(Minecraft days)",
                     "&fBarrel Type&7: &#F7FFC9%barrel_type%",
                     "",
+                    "&7%lore%",
+                    "",
                     "&fIngredients&7:",
                     "%ingredients%"
                 )

@@ -85,15 +85,20 @@ data class GuiItem(
             val lore: MutableList<String> = configItemSection.lore
                 .map { BUtil.color(recipeItemStringHelper(it, recipe) ?: "")}.toMutableList()
 
-            val ingredientsPlaceHolderIndexes: List<Int> = lore.mapIndexedNotNull { index, line -> if (line.contains("%ingredients%")) index else null }
-            for (index in ingredientsPlaceHolderIndexes) {
-                lore.removeAt(index)
-                lore.addAll(index, ingredients)
-            }
+            replaceWithList("%ingredients%", ingredients, lore)
+            replaceWithList("%lore%", recipe.lore, lore)
 
             meta.lore = lore
             item.itemMeta = meta
             return item
+        }
+
+        private fun replaceWithList(key: String, replacements: List<String>, lore: MutableList<String>) {
+            val placeHolderIndexes: List<Int> = lore.mapIndexedNotNull { index, line -> if (line.contains(key)) index else null }
+            for (index in placeHolderIndexes) {
+                lore.removeAt(index)
+                lore.addAll(index, replacements)
+            }
         }
         
         private fun recipeItemStringHelper(string: String?, recipe: Recipe): String? {

@@ -1,7 +1,6 @@
 package dev.jsinco.recipes.guis
 
 import com.dre.brewery.utility.BUtil
-import dev.jsinco.recipes.Util
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack

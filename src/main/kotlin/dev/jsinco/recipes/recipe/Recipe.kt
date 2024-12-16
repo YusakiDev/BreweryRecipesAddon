@@ -14,9 +14,8 @@ data class Recipe (
     val distillTime: Int,
     val age: Int,
     val woodType: BarrelWoodType,
-
+    val lore: List<String>,
     val ingredients: Map<String, Int>,
-
     val potionColor: PotionColor?,
     val customModelData: Int,
     val rarityWeight: Int
@@ -31,6 +30,7 @@ data class Recipe (
         private var distillTime: Int = 0
         private var age: Int = 0
         private var woodType: BarrelWoodType = BarrelWoodType.ANY
+        private var lore: List<String> = emptyList()
         private var ingredients: Map<String, Int> = emptyMap()
         private var potionColor: PotionColor? = null
         private var customModelData: Int = 0
@@ -44,12 +44,13 @@ data class Recipe (
         fun distillTime(distillTime: Int) = apply { this.distillTime = distillTime }
         fun age(age: Int) = apply { this.age = age }
         fun woodType(woodType: BarrelWoodType) = apply { this.woodType = woodType }
+        fun lore(lore: List<String>) = apply { this.lore = lore }
         fun ingredients(ingredients: Map<String, Int>) = apply { this.ingredients = ingredients }
         fun potionColor(potionColor: PotionColor?) = apply { this.potionColor = potionColor }
         fun customModelData(customModelData: Int) = apply { this.customModelData = customModelData }
         fun rarityWeight(rarityWeight: Int) = apply { this.rarityWeight = rarityWeight }
 
-        fun build() = Recipe(recipeKey, name, difficulty, cookingTime, distillRuns, distillTime, age, woodType, ingredients, potionColor, customModelData, rarityWeight)
+        fun build() = Recipe(recipeKey, name, difficulty, cookingTime, distillRuns, distillTime, age, woodType, lore, ingredients, potionColor, customModelData, rarityWeight)
     }
 
 }

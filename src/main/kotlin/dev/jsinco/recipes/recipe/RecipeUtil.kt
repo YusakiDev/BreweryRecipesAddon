@@ -42,6 +42,7 @@ object RecipeUtil {
             .distillRuns(bRecipe.distillruns.toInt())
             .distillTime(bRecipe.distillTime)
             .age(bRecipe.age)
+            .lore(bRecipe.getLoreForQuality(5) ?: listOf())
             .woodType(bRecipe.wood)
             .ingredients(parseIngredients(bRecipe.ingredients.map {it.toConfigString()}))
             .potionColor(PotionColor.fromString(bRecipe.color.toString()))
