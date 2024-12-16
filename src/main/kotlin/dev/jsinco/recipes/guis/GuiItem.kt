@@ -24,6 +24,22 @@ data class GuiItem(
     val glint: Boolean,
     val customModelData: Int
 ) {
+
+    fun toItemStack(): ItemStack {
+        val item = ItemStack(material)
+        val meta = item.itemMeta ?: return item
+        meta.setDisplayName(BUtil.color(name))
+        meta.lore = Util.colorArrayList(lore)
+        if (glint) {
+            meta.addEnchant(Enchantment.MENDING, 1, true)
+        }
+        if (customModelData != 0) {
+            meta.setCustomModelData(customModelData)
+        }
+        item.itemMeta = meta
+        return item
+    }
+
     companion object {
         private val plugin: BreweryPlugin = BreweryPlugin.getInstance()
         private val config: RecipesConfig = Recipes.configManager.getConfig(RecipesConfig::class.java)
@@ -51,6 +67,8 @@ data class GuiItem(
             itemPair.second.itemMeta = meta
             return itemPair
         }
+
+        fun getUnknownRecipesItem(): Pair<List<Int>, ItemStack> = createGUIItem(getGUIItem(config.gui.items.unknownRecipe), GuiItemType.BORDER_ITEM)
 
         fun createRecipeGuiItem(recipe: Recipe): ItemStack {
             val configItemSection = config.gui.items.recipeGuiItem
@@ -114,7 +132,7 @@ data class GuiItem(
 
         private fun createGUIItem(guiItem: GuiItem, guiItemType: GuiItemType): Pair<List<Int>, ItemStack> {
             val item = ItemStack(guiItem.material)
-            val meta = item.itemMeta!!
+            val meta = item.itemMeta ?: return Pair(guiItem.slots, item)
             meta.setDisplayName(BUtil.color(guiItem.name))
             meta.lore = Util.colorArrayList(guiItem.lore)
             if (guiItem.glint) {

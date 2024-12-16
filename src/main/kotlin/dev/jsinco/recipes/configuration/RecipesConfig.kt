@@ -145,6 +145,16 @@ class RecipesConfig : AddonConfigFile() {
                 var useRecipeCustomModelData = false
             }
 
+            @CustomKey("unknown-recipe")
+            @Comment("The item shown when a player does not know a recipe",
+                "Set this to AIR to disable completely and have only *known* recipes show up")
+            var unknownRecipe = ConfigItemSection.Builder()
+                .material(Material.AIR)
+                .name("&#f498f6??? Recipe")
+                .lore("&7This recipe is unknown to you")
+                .glint(true)
+                .build()
+
 
             @CustomKey("total_recipes")
             @Comment("PLACEHOLDERS: %total_recipes% - The total amount of recipes the player has out of the total recipes in Brewery's config")

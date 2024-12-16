@@ -8,6 +8,7 @@ import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeUtil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -28,11 +29,15 @@ class RecipeGui(player: Player) : InventoryHolder {
 
         val recipes: List<Recipe> = RecipeUtil.getAllRecipes()
         var totalRecipes = 0
+        val unknownRecipe = GuiItem.getUnknownRecipesItem().second
 
         for (recipe in recipes) {
-            if (!Util.checkForRecipePermission(player, recipe.recipeKey)) continue
-            recipeGuiItems.add(GuiItem.createRecipeGuiItem(recipe))
-            totalRecipes++
+            if (Util.checkForRecipePermission(player, recipe.recipeKey)) {
+                recipeGuiItems.add(GuiItem.createRecipeGuiItem(recipe))
+                totalRecipes++
+            } else if (unknownRecipe.type != Material.AIR) {
+                recipeGuiItems.add(unknownRecipe)
+            }
         }
 
         // Sort the recipeGuiItems alphabetically based on their display name
