@@ -152,7 +152,7 @@ class RecipesConfig : AddonConfigFile() {
                 .material(Material.AIR)
                 .name("&#f498f6??? Recipe")
                 .lore("&7This recipe is unknown to you")
-                .glint(true)
+                .glint(false)
                 .build()
 
 

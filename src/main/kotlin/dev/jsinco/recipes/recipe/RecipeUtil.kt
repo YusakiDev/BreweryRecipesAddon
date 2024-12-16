@@ -45,7 +45,7 @@ object RecipeUtil {
             .lore(bRecipe.getLoreForQuality(5) ?: listOf())
             .woodType(bRecipe.wood)
             .ingredients(parseIngredients(bRecipe.ingredients.map {it.toConfigString()}))
-            .potionColor(PotionColor.fromString(bRecipe.color.toString()))
+            .potionColor(bRecipe.color)
             .customModelData(cmModelData)
             .rarityWeight(bRecipe.difficulty)
             .build()
