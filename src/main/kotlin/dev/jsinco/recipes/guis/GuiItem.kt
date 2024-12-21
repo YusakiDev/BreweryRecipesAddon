@@ -87,7 +87,7 @@ data class GuiItem(
             if (configItemSection.glint) { // glint
                 meta.addEnchant(Enchantment.MENDING, 1, true)
             }
-            if (recipe.customModelData != 0) { // custom model data
+            if (config.gui.items.recipeGuiItem.useRecipeCustomModelData) { // custom model data
                 meta.setCustomModelData(recipe.customModelData)
             }
 
