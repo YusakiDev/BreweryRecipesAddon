@@ -20,6 +20,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
 }
 
+
 kotlin {
     jvmToolchain(21)
 }
@@ -46,12 +47,15 @@ hangarPublish {
 }
 
 fun readChangeLog(): String {
-    return if (!project.hasProperty("changelog")) {
+    val text: String = if (!project.hasProperty("changelog")) {
         file("CHANGELOG.md").run {
-            if (exists()) readText().replace("\${version}", project.version.toString()) else ""
+            if (exists()) readText() else "No Changelog found."
         }
     } else {
-        project.property("changelog") as String
+        (project.property("changelog") as String)
+            .replaceFirstChar { "" }
+            .dropLast(1)
     }
+    return text.replace("\${version}", project.version.toString())
 }
 
