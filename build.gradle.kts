@@ -33,7 +33,7 @@ hangarPublish {
     publications.register("plugin") {
         version.set(project.version.toString())
         channel.set("Release")
-        id.set(project.name)
+        id.set("Recipes-BreweryX-Addon")
         apiKey.set(System.getenv("HANGAR_TOKEN"))
         platforms {
             register(Platforms.PAPER) {
