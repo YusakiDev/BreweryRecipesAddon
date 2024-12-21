@@ -57,7 +57,7 @@ jobs:
           files: |
             [
               {
-                "path": "./build/libs/Recipes-*.jar",
+                "path": "./build/libs/Recipes-${{ github.event.release.tag_name }}.jar",
                 "platforms": ["PAPER", "FOLIA"]
               }
             ]
