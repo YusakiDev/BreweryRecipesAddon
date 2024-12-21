@@ -1,4 +1,4 @@
-name: 'Build and Publish to Hangar'
+name: 'Publish to Hangar & Modrinth with Gradle'
 
 on:
   release:
@@ -34,4 +34,4 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CHANGELOG: ${{ github.event.release.body }}
         with:
-          arguments: build modrinth --stacktrace
+          arguments: modrinth --stacktrace
