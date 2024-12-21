@@ -1,7 +1,6 @@
 package dev.jsinco.recipes.recipe
 
 import com.dre.brewery.recipe.BRecipe
-import com.dre.brewery.recipe.PotionColor
 import dev.jsinco.recipes.Recipes
 
 object RecipeUtil {

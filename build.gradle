@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.dre.brewery:BreweryX:3.4.4")
+    compileOnly("com.dre.brewery:BreweryX:3.4.5-SNAPSHOT#4")
     compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
     compileOnly "net.luckperms:api:5.4"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 
