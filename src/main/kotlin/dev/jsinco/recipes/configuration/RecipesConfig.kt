@@ -122,7 +122,7 @@ class RecipesConfig : AddonConfigFile() {
                     "               %ingredient% - The ingredient's name"
                 )
                 var ingredientFormat = " &#F7FFC9%amount%x &f%ingredient%"
-                var material = Material.PAPER
+                var material = Material.POTION
                 var slots = listOf(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
                 @CustomKey("display_name")
                 var displayName = "&#F7FFC9%recipe% &fRecipe"
