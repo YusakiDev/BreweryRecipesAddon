@@ -21,7 +21,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Publish to Hangar
+      - name: Publish to Hangar with Gradle
+        uses: gradle/gradle-build-action@v3
         env:
           HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
-        run: ./gradlew build publishPluginPublicationToHangar --stacktrace -Pchangelog=${{ github.event.release.body }}
+        with:
+          arguments: build publishPluginPublicationToHangar --stacktrace -Pchangelog=${{ github.event.release.body }}
