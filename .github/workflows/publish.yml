@@ -26,4 +26,4 @@ jobs:
         env:
           HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
         with:
-          arguments: build publishPluginPublicationToHangar --stacktrace -Pchangelog=${{ github.event.release.body }}
+          arguments: build publishPluginPublicationToHangar --stacktrace -Pchangelog="${{ github.event.release.body }}"
