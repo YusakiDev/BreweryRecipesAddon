@@ -3,6 +3,7 @@ import io.papermc.hangarpublishplugin.model.Platforms
 plugins {
     kotlin("jvm") version "2.0.21"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.modrinth.minotaur") version "2.8.7"
 }
 
 group = "dev.jsinco.recipes"
@@ -46,15 +47,20 @@ hangarPublish {
     }
 }
 
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set(project.name) // This can be the project ID or the slug. Either will work!
+    versionNumber.set(project.version.toString())
+    versionType.set("release") // This is the default -- can also be `beta` or `alpha`
+    uploadFile.set(tasks.jar)
+    loaders.addAll("bukkit", "spigot", "paper", "purpur", "folia")
+    gameVersions.addAll("1.21.x")
+    changelog.set(readChangeLog())
+}
+
 fun readChangeLog(): String {
-    val text: String = if (!project.hasProperty("changelog")) {
-        file("CHANGELOG.md").run {
-            if (exists()) readText() else "No Changelog found."
-        }
-    } else {
-        (project.property("changelog") as String)
-            .replaceFirstChar { "" }
-            .dropLast(1)
+    val text: String = System.getenv("CHANGELOG") ?: file("CHANGELOG.md").run {
+        if (exists()) readText() else "No Changelog found."
     }
     return text.replace("\${version}", project.version.toString())
 }

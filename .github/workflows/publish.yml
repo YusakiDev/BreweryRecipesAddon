@@ -25,5 +25,13 @@ jobs:
         uses: gradle/gradle-build-action@v3
         env:
           HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
+          CHANGELOG: ${{ github.event.release.body }}
         with:
-          arguments: build publishPluginPublicationToHangar --stacktrace -Pchangelog="${{ github.event.release.body }}"
+          arguments: build publishPluginPublicationToHangar --stacktrace
+      - name: Publish to Modrinth with Gradle
+        uses: gradle/gradle-build-action@v3
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CHANGELOG: ${{ github.event.release.body }}
+        with:
+          arguments: build modrinth --stacktrace
