@@ -222,6 +222,7 @@ class RecipesConfig : AddonConfigFile() {
         @CustomKey("already-learned")
         var alreadyLearned = "&rYou already know this recipe!"
         @Comment("PLACEHOLDERS: %recipe% the name of the recipe.")
+        @CommentSpace(0)
         var learned = "&rYou have learned the '&#F7FFC9%recipe%&r' recipe!"
     }
 }
