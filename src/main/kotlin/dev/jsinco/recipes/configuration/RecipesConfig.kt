@@ -8,6 +8,8 @@ import com.dre.brewery.configuration.sector.AbstractOkaeriConfigSector
 import com.dre.brewery.depend.okaeri.configs.OkaeriConfig
 import com.dre.brewery.depend.okaeri.configs.annotation.Comment
 import com.dre.brewery.depend.okaeri.configs.annotation.CustomKey
+import dev.jsinco.recipes.guis.SortMethod
+import dev.jsinco.recipes.guis.UnknownRecipeSortMethod
 import dev.jsinco.recipes.permissions.PermissionSetter
 import org.bukkit.Material
 
@@ -98,6 +100,21 @@ class RecipesConfig : AddonConfigFile() {
     class GuiSection : OkaeriConfig() {
         var title = "&#f670f1&lR&#dd7af6&le&#c584fa&lc&#ac8eff&li&#9c92ff&lp&#8d96ff&le&#7d9aff&ls"
         var size = 54
+
+
+        @CustomKey("sort-method")
+        @Comment("Determines how recipes are sorted in the Gui",
+            "When using ALPHABETICAL, recipes are sorted by their name alphabetically, case insensitive",
+            "When using DEFINITION, recipes are sorted in the same order they are defined in recipes.yml")
+        var sortMethod = SortMethod.ALPHABETICAL
+
+        @CustomKey("unknown-recipe-sort-method")
+        @Comment("Determines how recipes a player does not know are sorted in the Gui",
+            "When using KNOWN_FIRST, known recipes are shown first",
+            "When using MIXED, known and unknown recipes are sorted together",
+            "When using UNKNOWN_FIRST, unknown recipes are shown first",
+            "The unknown-recipe item must not be AIR for unknown recipes to show up in the Gui")
+        var unknownRecipeSortMethod = UnknownRecipeSortMethod.MIXED
 
 
         var items = GuiItemsSection()

@@ -2,8 +2,8 @@ package dev.jsinco.recipes.guis
 
 import com.dre.brewery.utility.BUtil
 import dev.jsinco.recipes.Recipes
-import dev.jsinco.recipes.configuration.RecipesConfig
 import dev.jsinco.recipes.Util
+import dev.jsinco.recipes.configuration.RecipesConfig
 import dev.jsinco.recipes.recipe.Recipe
 import dev.jsinco.recipes.recipe.RecipeUtil
 import org.bukkit.Bukkit
@@ -27,30 +27,41 @@ class RecipeGui(player: Player) : InventoryHolder {
             }
         }
 
-        val recipes: List<Recipe> = RecipeUtil.getAllRecipes()
-        var totalRecipes = 0
-        val unknownRecipe = GuiItem.getUnknownRecipesItem().second
+        val recipes: MutableList<MaybeKnownRecipe> = RecipeUtil.getAllRecipes()
+            .map { MaybeKnownRecipe(it, Util.checkForRecipePermission(player, it.recipeKey)) }.toMutableList()
 
-        for (recipe in recipes) {
-            if (Util.checkForRecipePermission(player, recipe.recipeKey)) {
-                recipeGuiItems.add(GuiItem.createRecipeGuiItem(recipe))
-                totalRecipes++
+        when (config.gui.sortMethod) {
+            SortMethod.ALPHABETICAL -> recipes.sortBy {
+                ChatColor.stripColor(RecipeUtil.parseRecipeName(it.recipe.name).lowercase())
+            }
+            SortMethod.DEFINITION -> {}
+        }
+        // sortBy is stable, the recipes will stay sorted alphabetically if enabled
+        when (config.gui.unknownRecipeSortMethod) {
+            UnknownRecipeSortMethod.KNOWN_FIRST -> recipes.sortByDescending{ it.known }
+            UnknownRecipeSortMethod.MIXED -> {}
+            UnknownRecipeSortMethod.UNKNOWN_FIRST -> recipes.sortBy{ it.known }
+        }
+
+        var knownRecipes = 0
+        val unknownRecipe = GuiItem.getUnknownRecipesItem().second
+        for (maybeKnownRecipe in recipes) {
+            if (maybeKnownRecipe.known) {
+                recipeGuiItems.add(GuiItem.createRecipeGuiItem(maybeKnownRecipe.recipe))
+                knownRecipes++
             } else if (unknownRecipe.type != Material.AIR) {
                 recipeGuiItems.add(unknownRecipe)
             }
         }
 
-        // Sort the recipeGuiItems alphabetically based on their display name
-        recipeGuiItems.sortBy { itemStack ->
-            val meta = itemStack.itemMeta
-            ChatColor.stripColor(meta?.displayName ?: "")
-        }
-
-        val totalRecipesItem = GuiItem.getTotalRecipesItem(totalRecipes, recipes.size)
+        val totalRecipesItem = GuiItem.getTotalRecipesItem(knownRecipes, recipes.size)
         for (slot in totalRecipesItem.first) {
             inv.setItem(slot, totalRecipesItem.second)
         }
     }
+
+    data class MaybeKnownRecipe(val recipe: Recipe, val known: Boolean)
+
     //
     val paginatedGui: PaginatedGui = PaginatedGui(BUtil.color(config.gui.title), inv, recipeGuiItems, config.gui.items.recipeGuiItem.slots)
 
