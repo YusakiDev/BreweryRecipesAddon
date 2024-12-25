@@ -3,12 +3,15 @@ package dev.jsinco.recipes
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.utility.BUtil
 import dev.jsinco.recipes.configuration.RecipesConfig
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.permissions.Permission
+import org.bukkit.permissions.PermissionDefault
 import org.bukkit.persistence.PersistentDataType
 
 object Util {
@@ -62,6 +65,8 @@ object Util {
     }
 
     fun checkForRecipePermission(player: Player, recipeKey: String): Boolean {
-        return player.hasPermission(config.recipePermissionNode.replace("%recipe%", recipeKey))
+        val permissionNode = config.recipePermissionNode.replace("%recipe%", recipeKey)
+        // PermissionDefault.FALSE is required to prevent OPs from unlocking all recipes
+        return player.hasPermission(Permission(permissionNode, PermissionDefault.FALSE))
     }
 }
