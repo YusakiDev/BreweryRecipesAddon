@@ -92,7 +92,7 @@ modrinth {
     uploadFile.set(tasks.shadowJar)
     token.set(System.getenv("MODRINTH_TOKEN") ?: return@modrinth)
     loaders.addAll("bukkit", "spigot", "paper", "purpur", "folia")
-    gameVersions.addAll("1.21.x")
+    gameVersions.addAll("1.20.5", "1.20.6","1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4")
     changelog.set(readChangeLog())
 }
 
