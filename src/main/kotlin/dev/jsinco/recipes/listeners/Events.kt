@@ -2,6 +2,7 @@ package dev.jsinco.recipes.listeners
 
 import com.dre.brewery.BreweryPlugin
 import com.dre.brewery.api.events.brew.BrewModifyEvent
+import com.dre.brewery.recipe.BRecipe
 import com.dre.brewery.utility.Logging
 import dev.jsinco.recipes.Recipes
 import dev.jsinco.recipes.configuration.RecipesConfig
@@ -114,7 +115,16 @@ class Events(private val plugin: BreweryPlugin) : Listener {
             return
         }
 
-        val bRecipe = event.brew.currentRecipe
+        val brew = event.brew
+        val ingredients = brew.ingredients ?: return
+
+        // Convert BIngredients to List<Ingredient>
+        val ingredientsList = ingredients.ingredientList
+
+        val bRecipe = BRecipe.getAllRecipes().find { recipe ->
+            !recipe.isMissingIngredients(ingredientsList)
+        } ?: return
+
         val recipeKey: String = bRecipe.id
 
         if (Util.checkForRecipePermission(player, recipeKey)) {
@@ -125,4 +135,7 @@ class Events(private val plugin: BreweryPlugin) : Listener {
         Logging.msg(player, config.messages.learned.replace("%recipe%", bRecipe.recipeName))
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
+
+
+
 }
