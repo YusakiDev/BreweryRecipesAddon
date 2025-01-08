@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
     id("com.modrinth.minotaur") version "2.8.7"
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 group = "dev.jsinco.recipes"
@@ -31,22 +32,38 @@ kotlin {
 }
 
 
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-}
 
-tasks.register("publishRelease") {
-    println("Publishing a new release to: modrinth and hangarn")
-    dependsOn(modrinth)
-    finalizedBy("publishPluginPublicationToHangar")
+tasks {
+    jar {
+        enabled = false
+    }
 
-    doLast {
-        val webhook = DiscordWebhook(System.getenv("DISCORD_WEBHOOK") ?: return@doLast, false)
-        webhook.message = "@everyone"
-        webhook.embedTitle = "Recipes - v${project.version}"
-        webhook.embedDescription = readChangeLog()
-        webhook.embedThumbnailUrl = "https://cdn.modrinth.com/data/F6Rdllwv/a51de91e8f7dca5303e4055c0d54e2e510efae7d.png"
-        webhook.send()
+    shadowJar {
+        archiveClassifier.set("")
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
+    withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+    }
+
+    register("publishRelease") {
+        println("Publishing a new release to: modrinth and hangar")
+        finalizedBy(modrinth)
+        finalizedBy("publishPluginPublicationToHangar")
+
+
+        doLast {
+
+            val webhook = DiscordWebhook(System.getenv("DISCORD_WEBHOOK") ?: return@doLast, false)
+            webhook.message = "@everyone"
+            webhook.embedTitle = "Recipes - v${project.version}"
+            webhook.embedDescription = readChangeLog()
+            webhook.embedThumbnailUrl = "https://cdn.modrinth.com/data/F6Rdllwv/a51de91e8f7dca5303e4055c0d54e2e510efae7d.png"
+            webhook.send()
+        }
     }
 }
 
@@ -55,10 +72,10 @@ hangarPublish {
         version.set(project.version.toString())
         channel.set("Release")
         id.set("Recipes-BreweryX-Addon")
-        apiKey.set(System.getenv("HANGAR_TOKEN"))
+        apiKey.set(System.getenv("HANGAR_TOKEN") ?: return@register)
         platforms {
             register(Platforms.PAPER) {
-                jar.set(tasks.jar.flatMap { it.archiveFile })
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
                 platformVersions.set(listOf("1.21.x"))
             }
         }
@@ -66,12 +83,14 @@ hangarPublish {
     }
 }
 
+
+
 modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set(project.name) // This can be the project ID or the slug. Either will work!
+    projectId.set("breweryrecipesaddon") // This can be the project ID or the slug. Either will work!
     versionNumber.set(project.version.toString())
     versionType.set("release") // This is the default -- can also be `beta` or `alpha`
-    uploadFile.set(tasks.jar)
+    uploadFile.set(tasks.shadowJar)
+    token.set(System.getenv("MODRINTH_TOKEN") ?: return@modrinth)
     loaders.addAll("bukkit", "spigot", "paper", "purpur", "folia")
     gameVersions.addAll("1.21.x")
     changelog.set(readChangeLog())
